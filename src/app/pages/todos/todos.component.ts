@@ -36,4 +36,8 @@ export class TodosComponent implements OnInit {
     this.todoStore.closeEditor();
   }
 
+  toDeleteTodo(id: string) {
+    this.todoStore.removeTodo(id)
+  }
+
 }

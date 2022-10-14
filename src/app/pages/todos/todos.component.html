@@ -30,7 +30,7 @@
           {{ item.description }}
           <ul nz-list-item-actions>
             <nz-list-item-action><a>編輯</a></nz-list-item-action>
-            <nz-list-item-action><a>刪除</a></nz-list-item-action>
+            <nz-list-item-action><a (click)="toDeleteTodo(item.id)">刪除</a></nz-list-item-action>
           </ul>
         </ng-container>
       </nz-list-item>

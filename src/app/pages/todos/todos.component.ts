@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import type {TODO} from './fake-todo-api'
-import {getTodos} from './fake-todo-api'
+import {TodoStore} from './todos.store'
 
 /**
  * 功能
@@ -15,22 +14,26 @@ import {getTodos} from './fake-todo-api'
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
-  styleUrls: ['./todos.component.css']
+  styleUrls: ['./todos.component.css'],
+  providers: [TodoStore]
 })
 export class TodosComponent implements OnInit {
-  isLoading = true;
-  list: TODO[] = [];
+  list$ = this.todoStore.todos$;
+  isEditorOpen$ = this.todoStore.isEditorOpen$
+  editorTitle$ = this.todoStore.editorMode$
 
-  constructor() {};
-  
+  constructor(private readonly todoStore: TodoStore) {};
 
   ngOnInit(): void {
-    this.getData();
+   
   }
 
-  async getData() {
-   const todos = await getTodos();
-   this.list = todos
+  toOpenEditor() {
+    this.todoStore.openEditor();
+  }
+
+  toCloseEditor() {
+    this.todoStore.closeEditor();
   }
 
 }

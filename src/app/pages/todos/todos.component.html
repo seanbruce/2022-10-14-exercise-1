@@ -1,1 +1,41 @@
-<p>todos works!</p>
+<ng-template #toolbar>
+  <div nz-row nzGutter="16">
+    <div nz-col nzFlex="1" >
+        <h1 class="todo-list-title">待辦列表</h1>
+    </div>
+    <div nz-col >
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input type="text" nz-input placeholder="按待辦的名稱搜索" />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+    </div>
+    <div nz-col>
+        <button nz-button nzType="primary">創建待辦</button>
+    </div>
+  </div>
+</ng-template>
+
+<div class="todo-container">
+
+    <nz-list class="demo-loadmore-list" [nzHeader]="toolbar">
+      <nz-list-item *ngFor="let item of list; index as i">
+        <ng-container>
+          <nz-list-item-meta [nzDescription]="(i + 1).toString() + '.'">
+            <nz-list-item-meta-title>
+              {{ item.title }}
+            </nz-list-item-meta-title>
+          </nz-list-item-meta>
+          {{ item.description }}
+          <ul nz-list-item-actions>
+            <nz-list-item-action><a>編輯</a></nz-list-item-action>
+            <nz-list-item-action><a>刪除</a></nz-list-item-action>
+          </ul>
+        </ng-container>
+      </nz-list-item>
+      <nz-list-pagination>
+        <nz-pagination [nzPageIndex]="1" [nzTotal]="50" nzShowSizeChanger></nz-pagination>
+      </nz-list-pagination>
+    </nz-list>
+</div>

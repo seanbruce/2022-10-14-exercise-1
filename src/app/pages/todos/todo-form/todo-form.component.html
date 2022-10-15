@@ -1,25 +1,14 @@
-<form
-  id="todo-form"
-  nz-form
-  [formGroup]="validateForm"
-  class="login-form"
-  (ngSubmit)="submitForm()"
->
+<form id="todo-form" nz-form [formGroup]="editForm" class="login-form" (ngSubmit)="submitForm()">
   <nz-form-item>
     <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="title">待辦名稱</nz-form-label>
     <nz-form-control nzErrorTip="請輸入待辦名稱!">
-      <input type="text" nz-input formControlName="title" placeholder="名稱" id="title" />
+      <input type="text" nz-input [formControl]="editForm.controls.title" placeholder="名稱" id="title" />
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="title">待辦描述</nz-form-label>
     <nz-form-control nzErrorTip="請輸入待辦描述!">
-      <textarea
-        formControlName="description"
-        nz-input
-        rows="4"
-        placeholder="描述"
-      ></textarea>
+      <textarea [formControl]="editForm.controls.description" nz-input rows="4" placeholder="描述"></textarea>
     </nz-form-control>
   </nz-form-item>
 </form>

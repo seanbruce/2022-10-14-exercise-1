@@ -17,40 +17,49 @@ interface TodoStoreInterface {
   editorMode: EditorMode;
   defaultFormValues: TODO | null;
   titleSearchString: string;
+  paginationIndex: number;
+  paginationPageSize: number;
 }
 
 const randomId = () => Math.random().toString(36).slice(2);
 
+const pageSizeOptions = [5, 10, 15];
+const defaultState: TodoStoreInterface = {
+  todos: [
+    {
+      id: randomId(),
+      title: '學習Angular',
+      description: '使用Angular官網學習Angular的使用',
+      done: true,
+    },
+    {
+      id: randomId(),
+      title: '學習C#',
+      description: '學習C#的基礎知識',
+      done: false,
+    },
+    {
+      id: randomId(),
+      title: '學習ABP',
+      description: '學習ABP的開發',
+      done: false,
+    },
+  ],
+  isEditorOpen: false,
+  editorMode: 'create',
+  defaultFormValues: null,
+  titleSearchString: '',
+  paginationIndex: 1,
+  paginationPageSize: pageSizeOptions[0],
+};
+
 @Injectable()
 class TodoStore extends ComponentStore<TodoStoreInterface> {
   constructor() {
-    super({
-      todos: [
-        {
-          id: randomId(),
-          title: '學習Angular',
-          description: '使用Angular官網學習Angular的使用',
-          done: true,
-        },
-        {
-          id: randomId(),
-          title: '學習C#',
-          description: '學習C#的基礎知識',
-          done: false,
-        },
-        {
-          id: randomId(),
-          title: '學習ABP',
-          description: '學習ABP的開發',
-          done: false,
-        },
-      ],
-      isEditorOpen: false,
-      editorMode: 'create',
-      defaultFormValues: null,
-      titleSearchString: ''
-    });
+    super(defaultState);
   }
+
+  pageSizeOptions = pageSizeOptions;
 
   readonly todos$: Observable<TODO[]> = this.select((state) => state.todos);
   readonly isEditorOpen$: Observable<boolean> = this.select(
@@ -64,6 +73,12 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
   );
   readonly titleSearchString$: Observable<string> = this.select(
     (state) => state.titleSearchString
+  );
+  readonly paginationIndex$: Observable<number> = this.select(
+    (state) => state.paginationIndex
+  );
+  readonly paginationPageSize$: Observable<number> = this.select(
+    (state) => state.paginationPageSize
   );
 
   readonly openEditor = this.updater((state) => ({
@@ -90,25 +105,41 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
     ],
   }));
 
-  readonly updateTitleSearchString = this.updater((state, newString: string) => ({
-    ...state,
-    titleSearchString: newString
-  }));
+  readonly updateTitleSearchString = this.updater(
+    (state, newString: string) => ({
+      ...state,
+      titleSearchString: newString,
+      // paginationIndex: defaultState.paginationIndex,
+    })
+  );
 
   readonly removeTodo = this.updater((state, id: string) => ({
     ...state,
-    todos: state.todos.filter(todo => todo.id !== id)
-  }))
+    todos: state.todos.filter((todo) => todo.id !== id),
+  }));
+
+  readonly updatePaginationIndex = this.updater((state, index: number) => ({
+    ...state,
+    paginationIndex: index,
+  }));
+
+  readonly updatePaginationPageSize = this.updater(
+    (state, pageSize: number) => ({
+      ...state,
+      paginationIndex: defaultState.paginationIndex,
+      paginationPageSize: pageSize,
+    })
+  );
 
   readonly toggleTodo = this.updater((state, id: string) => ({
     ...state,
-    todos: state.todos.map(todo => {
+    todos: state.todos.map((todo) => {
       if (todo.id !== id) {
-        return todo
+        return todo;
       }
-      return {...todo, done: !todo.done}
-    })
-  }))
+      return { ...todo, done: !todo.done };
+    }),
+  }));
 }
 
 export { TodoStore };

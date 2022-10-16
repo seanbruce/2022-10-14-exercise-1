@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { map, combineLatest } from 'rxjs';
+import { map, combineLatest, tap } from 'rxjs';
 
-import { TodoStore } from './todos.store';
+import { TODO, TodoStore } from './todos.store';
 
 /**
  * 功能
@@ -9,7 +9,7 @@ import { TodoStore } from './todos.store';
  * 添加todo[✅]
  * 編輯todo[]
  * 完成|未完成 狀態切換[✅]
- * 分頁(前端分頁)
+ * 分頁(前端分頁)[✅]
  */
 
 @Component({
@@ -20,16 +20,21 @@ import { TodoStore } from './todos.store';
 })
 export class TodosComponent implements OnInit {
   titleSearchString$ = this.todoStore.titleSearchString$;
+  listTotalSize$ = this.todoStore.todos$.pipe(map((todos) => todos.length));
   list$ = combineLatest([
     this.todoStore.todos$,
     this.todoStore.titleSearchString$,
+    this.todoStore.paginationIndex$,
+    this.todoStore.paginationPageSize$,
   ]).pipe(
-    map(([todos, searchString]) => {
+    map(([todos, searchString, pageIndex, pageSize]) => {
       const searchStringTrimmed = searchString.trim();
       if (!searchStringTrimmed) {
-        return todos;
+        return todos.slice((pageIndex - 1) * pageSize);
       }
-      return todos.filter((todo) => todo.title.includes(searchStringTrimmed));
+      return todos
+        .filter((todo) => todo.title.includes(searchStringTrimmed))
+        .slice((pageIndex - 1) * pageSize);
     })
   );
   isEditorOpen$ = this.todoStore.isEditorOpen$;
@@ -45,6 +50,11 @@ export class TodosComponent implements OnInit {
       }
     })
   );
+  get pageSizeOptions() {
+    return this.todoStore.pageSizeOptions;
+  }
+  paginationIndex$ = this.todoStore.paginationIndex$;
+  paginationPageSize$ = this.todoStore.paginationPageSize$;
 
   constructor(private readonly todoStore: TodoStore) {}
 
@@ -63,10 +73,23 @@ export class TodosComponent implements OnInit {
   }
 
   toUpdateTitleSearchString(newString: string) {
+    this.todoStore.updatePaginationIndex(1);
     this.todoStore.updateTitleSearchString(newString);
   }
 
   toToggleTodo(id: string) {
     this.todoStore.toggleTodo(id);
+  }
+
+  toUpdatePaginationIndex(index: number) {
+    this.todoStore.updatePaginationIndex(index);
+  }
+
+  toUpdatePaginationPageSize(pageSize: number) {
+    this.todoStore.updatePaginationPageSize(pageSize);
+  }
+
+  trackById(index: number, item: TODO) {
+    return item.id;
   }
 }

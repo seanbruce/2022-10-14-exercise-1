@@ -81,6 +81,11 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
     (state) => state.paginationPageSize
   );
 
+  readonly updateEditMode = this.updater((state, mode: EditorMode) => ({
+    ...state,
+    editorMode: mode,
+  }));
+
   readonly openEditor = this.updater((state) => ({
     ...state,
     isEditorOpen: true,
@@ -104,6 +109,27 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
       },
     ],
   }));
+
+  readonly editTodo = this.updater((state, updatedTodo: TODO) => ({
+    ...state,
+    isEditorOpen: false,
+    todos: state.todos.map((todo) => {
+      if (todo.id !== updatedTodo.id) {
+        return todo;
+      }
+      return {
+        ...todo,
+        ...updatedTodo,
+      };
+    }),
+  }));
+
+  readonly updateDefaultFormValues = this.updater(
+    (state, defaultFormValues: TODO | null) => ({
+      ...state,
+      defaultFormValues,
+    })
+  );
 
   readonly updateTitleSearchString = this.updater(
     (state, newString: string) => ({

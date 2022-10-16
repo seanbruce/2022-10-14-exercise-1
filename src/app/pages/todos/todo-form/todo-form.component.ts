@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TodoStore } from '../todos.store';
+import { combineLatest } from 'rxjs';
 
 export class TodoEditForm {
   title: FormControl<string>;
@@ -10,28 +11,48 @@ export class TodoEditForm {
 @Component({
   selector: 'app-todo-form',
   templateUrl: './todo-form.component.html',
-  styles: [``]
+  styles: [``],
 })
 export class TodoFormComponent implements OnInit {
-
   editForm = new FormGroup<TodoEditForm>({
     title: new FormControl(),
     description: new FormControl(),
   });
 
-
-  constructor(private readonly todoStore: TodoStore) { }
+  constructor(private readonly todoStore: TodoStore) {}
 
   ngOnInit(): void {
+    this.todoStore.defaultFormValues$.subscribe((defaultValue) => {
+      if (defaultValue === null) {
+        return;
+      }
+      this.editForm.setValue({
+        title: defaultValue.title,
+        description: defaultValue.description,
+      });
+    });
   }
 
   submitForm(): void {
-    console.log(this.editForm.value);
     if (this.editForm.valid) {
       console.log('submit', this.editForm.value);
-      this.todoStore.addTodo(this.editForm.value as any);
+      combineLatest([
+        this.todoStore.editorMode$,
+        this.todoStore.defaultFormValues$,
+      ]).subscribe(([mode, defaultFormValue]) => {
+        switch (mode) {
+          case 'create':
+            this.todoStore.addTodo(this.editForm.value as any);
+            break;
+          case 'update':
+            this.todoStore.editTodo({
+              ...defaultFormValue,
+              ...this.editForm.value,
+            });
+        }
+      });
     } else {
-      Object.values(this.editForm.controls).forEach(control => {
+      Object.values(this.editForm.controls).forEach((control) => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });
@@ -39,5 +60,4 @@ export class TodoFormComponent implements OnInit {
       });
     }
   }
-
 }

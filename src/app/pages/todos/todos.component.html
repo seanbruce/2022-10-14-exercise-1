@@ -18,7 +18,7 @@
       </ng-template>
     </div>
     <div nz-col>
-      <button nz-button nzType="primary" (click)="toOpenEditor()">
+      <button nz-button nzType="primary" (click)="toOpenEditorInCreateMode()">
         創建待辦
       </button>
     </div>
@@ -41,7 +41,11 @@
         </nz-list-item-meta>
         {{ item.description }}
         <ul nz-list-item-actions>
-          <nz-list-item-action><a>編輯</a></nz-list-item-action>
+          <nz-list-item-action
+            ><a (click)="toOpenEditorInEditMode(item)"
+              >編輯</a
+            ></nz-list-item-action
+          >
           <nz-list-item-action
             ><a (click)="toDeleteTodo(item.id)">刪除</a></nz-list-item-action
           >

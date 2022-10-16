@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { map, combineLatest, tap } from 'rxjs';
+import { map, combineLatest } from 'rxjs';
 
 import { TODO, TodoStore } from './todos.store';
 
@@ -60,7 +60,15 @@ export class TodosComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  toOpenEditor() {
+  toOpenEditorInCreateMode() {
+    this.todoStore.updateEditMode('create');
+    this.todoStore.updateDefaultFormValues(null);
+    this.todoStore.openEditor();
+  }
+
+  toOpenEditorInEditMode(todo: TODO) {
+    this.todoStore.updateEditMode('update');
+    this.todoStore.updateDefaultFormValues(todo);
     this.todoStore.openEditor();
   }
 

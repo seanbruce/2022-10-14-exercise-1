@@ -5,10 +5,10 @@ import { TodoStore } from './todos.store';
 
 /**
  * 功能
- * 按todo名稱搜索(前端搜索)[]
+ * 按todo名稱搜索(前端搜索)[✅]
  * 添加todo[✅]
  * 編輯todo[]
- * 完成|未完成 狀態切換[]
+ * 完成|未完成 狀態切換[✅]
  * 分頁(前端分頁)
  */
 
@@ -19,14 +19,13 @@ import { TodoStore } from './todos.store';
   providers: [TodoStore],
 })
 export class TodosComponent implements OnInit {
-
   titleSearchString$ = this.todoStore.titleSearchString$;
   list$ = combineLatest([
     this.todoStore.todos$,
     this.todoStore.titleSearchString$,
   ]).pipe(
     map(([todos, searchString]) => {
-      const searchStringTrimmed = searchString.trim()
+      const searchStringTrimmed = searchString.trim();
       if (!searchStringTrimmed) {
         return todos;
       }
@@ -65,5 +64,9 @@ export class TodosComponent implements OnInit {
 
   toUpdateTitleSearchString(newString: string) {
     this.todoStore.updateTitleSearchString(newString);
+  }
+
+  toToggleTodo(id: string) {
+    this.todoStore.toggleTodo(id);
   }
 }

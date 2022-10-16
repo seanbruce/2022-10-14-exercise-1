@@ -6,7 +6,7 @@ interface TODO {
   id: string;
   title: string;
   description: string;
-  done: false;
+  done: boolean;
 }
 
 type EditorMode = 'create' | 'update';
@@ -30,7 +30,7 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
           id: randomId(),
           title: '學習Angular',
           description: '使用Angular官網學習Angular的使用',
-          done: false,
+          done: true,
         },
         {
           id: randomId(),
@@ -98,6 +98,16 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
   readonly removeTodo = this.updater((state, id: string) => ({
     ...state,
     todos: state.todos.filter(todo => todo.id !== id)
+  }))
+
+  readonly toggleTodo = this.updater((state, id: string) => ({
+    ...state,
+    todos: state.todos.map(todo => {
+      if (todo.id !== id) {
+        return todo
+      }
+      return {...todo, done: !todo.done}
+    })
   }))
 }
 

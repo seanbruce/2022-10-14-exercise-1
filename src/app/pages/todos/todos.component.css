@@ -8,3 +8,10 @@
 .todo-container {
     max-width: 800px;
 }
+
+.todo-item {
+    cursor: pointer;
+}
+.todo-item-done {
+    text-decoration: line-through;
+}

@@ -8,7 +8,7 @@ import {NzButtonModule} from 'ng-zorro-antd/button'
 import {NzPaginationModule} from 'ng-zorro-antd/pagination'
 import {NzModalModule} from 'ng-zorro-antd/modal'
 import {NzFormModule} from 'ng-zorro-antd/form'
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IconsProviderModule } from '../../icons-provider.module';
 
 import { TodosComponent } from './todos.component';
@@ -27,6 +27,7 @@ import { TodoFormComponent } from './todo-form/todo-form.component';
     NzModalModule,
     NzFormModule,
     ReactiveFormsModule,
+    FormsModule,
     CommonModule,
     IconsProviderModule,
   ],

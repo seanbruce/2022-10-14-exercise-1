@@ -16,6 +16,7 @@ interface TodoStoreInterface {
   isEditorOpen: boolean;
   editorMode: EditorMode;
   defaultFormValues: TODO | null;
+  titleSearchString: string;
 }
 
 const randomId = () => Math.random().toString(36).slice(2);
@@ -47,6 +48,7 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
       isEditorOpen: false,
       editorMode: 'create',
       defaultFormValues: null,
+      titleSearchString: ''
     });
   }
 
@@ -59,6 +61,9 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
   );
   readonly defaultFormValues$: Observable<TODO | null> = this.select(
     (state) => state.defaultFormValues
+  );
+  readonly titleSearchString$: Observable<string> = this.select(
+    (state) => state.titleSearchString
   );
 
   readonly openEditor = this.updater((state) => ({
@@ -83,6 +88,11 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
         done: false,
       },
     ],
+  }));
+
+  readonly updateTitleSearchString = this.updater((state, newString: string) => ({
+    ...state,
+    titleSearchString: newString
   }));
 
   readonly removeTodo = this.updater((state, id: string) => ({

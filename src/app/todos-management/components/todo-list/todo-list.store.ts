@@ -3,7 +3,7 @@ import { ComponentStore } from '@ngrx/component-store';
 import { Observable } from 'rxjs';
 import { TodoList, TodosManagement } from '../../todos-management.models';
 
-const randomId = () => Math.random().toString(36).slice(2);
+export const randomId = () => Math.random().toString(36).slice(2);
 
 @Injectable()
 export class TodoListStore extends ComponentStore<TodoList.ViewModel> {
@@ -29,49 +29,22 @@ export class TodoListStore extends ComponentStore<TodoList.ViewModel> {
           done: false,
         },
       ],
-      isEditorOpen: false,
-      editorMode: 'create',
-      defaultFormValues: null,
     });
   }
 
-  readonly todos$: Observable<TodosManagement.Todo[]> = this.select((state) => state.todos);
-  readonly isEditorOpen$: Observable<boolean> = this.select(
-    (state) => state.isEditorOpen
-  );
-  readonly editorMode$: Observable<TodoList.EditorMode> = this.select(
-    (state) => state.editorMode
-  );
-  readonly defaultFormValues$: Observable<TodosManagement.Todo | null> = this.select(
-    (state) => state.defaultFormValues
+  readonly todos$: Observable<TodosManagement.Todo[]> = this.select(
+    (state) => state.todos
   );
 
-  readonly openEditor = this.updater((state) => ({
+  readonly addTodo = this.updater((state, todo: TodosManagement.Todo) => ({
     ...state,
-    isEditorOpen: true,
-  }));
-
-  readonly closeEditor = this.updater((state) => ({
-    ...state,
-    isEditorOpen: false,
-  }));
-
-  readonly addTodo = this.updater((state, todo: Omit<TodosManagement.Todo, 'id' | 'done'>) => ({
-    ...state,
-    isEditorOpen: false,
-    todos: [
-      ...state.todos,
-      {
-        id: randomId(),
-        title: todo.title,
-        description: todo.description,
-        done: false,
-      },
-    ],
+    todos: [...state.todos, todo],
   }));
 
   readonly removeTodo = this.updater((state, id: string) => ({
     ...state,
-    todos: state.todos.filter(todo => todo.id !== id)
-  }))
+    todos: state.todos.filter((todo) => todo.id !== id),
+  }));
+
+
 }

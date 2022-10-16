@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TodosManagementRoutingModule } from './todos-management-routing.module';
 import { IndexComponent } from './components/index/index.component';
 import { TodoListComponent } from './components/todo-list/todo-list.component';
+import { TodoFormComponent } from './components/todo-form/todo-form.component';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -12,13 +13,16 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzCardModule } from 'ng-zorro-antd/card';
 import { ReactiveFormsModule } from '@angular/forms';
+
 
 
 @NgModule({
   declarations: [
     IndexComponent,
-    TodoListComponent
+    TodoListComponent,
+    TodoFormComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +35,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     NzModalModule,
     NzFormModule,
     ReactiveFormsModule,
-    TodosManagementRoutingModule
+    TodosManagementRoutingModule,
+    NzCardModule
   ]
 })
 export class TodosManagementModule { }

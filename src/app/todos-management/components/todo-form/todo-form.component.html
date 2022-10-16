@@ -1,0 +1,35 @@
+<form
+  id="todo-form"
+  nz-form
+  [formGroup]="editForm"
+  class="login-form"
+>
+  <nz-form-item>
+    <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="title"
+      >待辦名稱</nz-form-label
+    >
+    <nz-form-control nzErrorTip="請輸入待辦名稱!">
+      <input
+        type="text"
+        nz-input
+        [formControl]="editForm.controls.title"
+        placeholder="名稱"
+        id="title"
+      />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="title"
+      >待辦描述</nz-form-label
+    >
+    <nz-form-control nzErrorTip="請輸入待辦描述!">
+      <textarea
+        [formControl]="editForm.controls.description"
+        nz-input
+        rows="4"
+        placeholder="描述"
+      ></textarea>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<button nz-button (click)="toSave()">存檔</button>

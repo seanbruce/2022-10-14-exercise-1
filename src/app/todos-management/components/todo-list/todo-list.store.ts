@@ -1,27 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { Observable } from 'rxjs';
+import { TodoList, TodosManagement } from '../../todos-management.models';
 
-export interface TODO {
-  id: string;
-  title: string;
-  description: string;
-  done: false;
-}
-
-type EditorMode = 'create' | 'update';
-
-export interface TodoStoreInterface {
-  todos: TODO[];
-  isEditorOpen: boolean;
-  editorMode: EditorMode;
-  defaultFormValues: TODO | null;
-}
-
-const randomId = () => Math.random().toString(36).slice(2);
+export const randomId = () => Math.random().toString(36).slice(2);
 
 @Injectable()
-export class TodoListStore extends ComponentStore<TodoStoreInterface> {
+export class TodoListStore extends ComponentStore<TodoList.ViewModel> {
   constructor() {
     super({
       todos: [
@@ -44,49 +29,22 @@ export class TodoListStore extends ComponentStore<TodoStoreInterface> {
           done: false,
         },
       ],
-      isEditorOpen: false,
-      editorMode: 'create',
-      defaultFormValues: null,
     });
   }
 
-  readonly todos$: Observable<TODO[]> = this.select((state) => state.todos);
-  readonly isEditorOpen$: Observable<boolean> = this.select(
-    (state) => state.isEditorOpen
-  );
-  readonly editorMode$: Observable<EditorMode> = this.select(
-    (state) => state.editorMode
-  );
-  readonly defaultFormValues$: Observable<TODO | null> = this.select(
-    (state) => state.defaultFormValues
+  readonly todos$: Observable<TodosManagement.Todo[]> = this.select(
+    (state) => state.todos
   );
 
-  readonly openEditor = this.updater((state) => ({
+  readonly addTodo = this.updater((state, todo: TodosManagement.Todo) => ({
     ...state,
-    isEditorOpen: true,
-  }));
-
-  readonly closeEditor = this.updater((state) => ({
-    ...state,
-    isEditorOpen: false,
-  }));
-
-  readonly addTodo = this.updater((state, todo: Omit<TODO, 'id' | 'done'>) => ({
-    ...state,
-    isEditorOpen: false,
-    todos: [
-      ...state.todos,
-      {
-        id: randomId(),
-        title: todo.title,
-        description: todo.description,
-        done: false,
-      },
-    ],
+    todos: [...state.todos, todo],
   }));
 
   readonly removeTodo = this.updater((state, id: string) => ({
     ...state,
-    todos: state.todos.filter(todo => todo.id !== id)
-  }))
+    todos: state.todos.filter((todo) => todo.id !== id),
+  }));
+
+
 }

@@ -1,3 +1,12 @@
-<div class="todo-container">
+<nz-row [nzGutter]="6">
+  <nz-col [nzSpan]="listSapn$ | async">
     <app-todo-list></app-todo-list>
-</div>
+  </nz-col>
+  <nz-col [nzSpan]="detailSapn$ | async">
+    <nz-card nzTitle="編輯">
+      <app-todo-form></app-todo-form>
+    </nz-card>
+  </nz-col>
+</nz-row>
+
+<!-- <button nz-button (click)="toTest()">test</button> -->

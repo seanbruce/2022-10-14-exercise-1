@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { map, combineLatest } from 'rxjs';
+import { map, combineLatest, tap } from 'rxjs';
 
 import { TODO, TodoStore } from './todos.store';
 
@@ -35,7 +35,8 @@ export class TodosComponent implements OnInit {
       return todos
         .filter((todo) => todo.title.includes(searchStringTrimmed))
         .slice((pageIndex - 1) * pageSize);
-    })
+    }),
+    tap((result) => console.log({ result }))
   );
   isEditorOpen$ = this.todoStore.isEditorOpen$;
   editorTitle$ = this.todoStore.editorMode$.pipe(

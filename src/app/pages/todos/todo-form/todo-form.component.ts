@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TodoStore } from '../todos.store';
-import { combineLatest } from 'rxjs';
+import { combineLatest, first } from 'rxjs';
 
 export class TodoEditForm {
   title: FormControl<string>;
@@ -39,18 +39,20 @@ export class TodoFormComponent implements OnInit {
       combineLatest([
         this.todoStore.editorMode$,
         this.todoStore.defaultFormValues$,
-      ]).subscribe(([mode, defaultFormValue]) => {
-        switch (mode) {
-          case 'create':
-            this.todoStore.addTodo(this.editForm.value as any);
-            break;
-          case 'update':
-            this.todoStore.editTodo({
-              ...defaultFormValue,
-              ...this.editForm.value,
-            });
-        }
-      });
+      ])
+        .pipe(first())
+        .subscribe(([mode, defaultFormValue]) => {
+          switch (mode) {
+            case 'create':
+              this.todoStore.addTodo(this.editForm.value as any);
+              break;
+            case 'update':
+              this.todoStore.editTodo({
+                ...defaultFormValue,
+                ...this.editForm.value,
+              });
+          }
+        });
     } else {
       Object.values(this.editForm.controls).forEach((control) => {
         if (control.invalid) {

@@ -170,4 +170,4 @@ class TodoStore extends ComponentStore<TodoStoreInterface> {
 
 export { TodoStore };
 
-export type { TODO };
+export type { TODO, EditorMode };
